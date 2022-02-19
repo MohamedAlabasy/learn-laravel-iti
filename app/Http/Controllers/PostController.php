@@ -10,6 +10,7 @@ class PostController extends Controller
         ['id' => 1, 'title' => 'first post', 'posted_by' => 'mohamed', 'created_at' => '2009-02-19 10:00:00'],
         ['id' => 2, 'title' => 'second post', 'posted_by' => 'alabasy', 'created_at' => '2015-02-15 05:00:00'],
         ['id' => 3, 'title' => 'third post', 'posted_by' => 'beso', 'created_at' => '2021-03-8 05:00:00'],
+        ['id' => 4, 'title' => 'forth post', 'posted_by' => 'ahmed', 'created_at' => '2021-03-8 05:00:00'],
     ];
     public function index()
     {

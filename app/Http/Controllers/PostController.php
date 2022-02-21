@@ -3,53 +3,123 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
-    private $posts = [
-        ['id' => 1, 'title' => 'first post', 'posted_by' => 'mohamed', 'created_at' => '2009-02-19 10:00:00'],
-        ['id' => 2, 'title' => 'second post', 'posted_by' => 'alabasy', 'created_at' => '2015-02-15 05:00:00'],
-        ['id' => 3, 'title' => 'third post', 'posted_by' => 'beso', 'created_at' => '2021-03-8 05:00:00'],
-        ['id' => 4, 'title' => 'forth post', 'posted_by' => 'ahmed', 'created_at' => '2021-03-8 05:00:00'],
-        ['id' => 5, 'title' => '6th post', 'posted_by' => 'ali', 'created_at' => '2021-03-8 05:00:00'],
-    ];
+
+//home
     public function index()
     {
-        return view('posts.index', ['posts' => $this->posts]);
+        $posts = Post::paginate(10);
+        if (count($posts) <= 0) {
+            return view('posts.empty');
+        }
+        return view('posts.index', ['posts' => $posts]);
     }
 
+
+//empty statement
+    public function empty()
+    {
+        return view('posts.empty');
+    }
+
+//create post
     public function create()
     {
-        return view('posts.create');
-    }
-
-    public function show($postID)
-    {
-        return view('posts.show', ['postsID' => $postID]);
+        $user = User::all();
+        return view('posts.create', ['user' => $user]);
     }
 
     public function store()
     {
-        return view('posts.store');
+        if (request()->has('title') && request()->has('description') && request()->has('user_id')) {
+
+            if (!request()->filled('title')) { //error in title
+                session()->put('titleError', 'you must enter post title');
+                $user = User::all();
+                return view('posts.create', ['user' => $user]);
+            } elseif (!request()->filled('description')) { //error in description
+                session()->put('descriptionError', 'you must enter post description');
+                $user = User::all();
+                return view('posts.create', ['user' => $user]);
+            } else { //there is no errors
+                $requestData = request()->all();
+//                for ($i = 3; $i < 103; $i++) {
+//                    Post::create([
+//                        'title' => "Number $i",
+//                        'description' => "This is post number $i",
+//                        'user_id' => '3',
+//                    ]);
+//                }
+                Post::create($requestData);
+                return to_route('posts.index');
+            }
+        }
     }
+
+//show post
+    public function show($postID)
+    {
+        $posts = Post::find($postID);
+        return view('posts.show', ['posts' => $posts]);
+    }
+
 
     public function edit($postID)
     {
-        return view('posts.edit', ['postID' => $postID]);
+        $posts = Post::find($postID);
+        return view('posts.edit', ['posts' => $posts, 'postID' => $postID]);
+    }
+
+    public function update($postID)
+    {
+        if (request()->has('title') && request()->has('description')
+            && !empty($postID) && $postID > 0) {
+            if (!request()->filled('title')) { //error in title
+                session()->put('titleError', 'you must enter post title');
+                $posts = Post::find($postID);
+                return view('posts.edit', ['posts' => $posts, 'postID' => $postID]);
+            } elseif (!request()->filled('description')) { //error in description
+                session()->put('descriptionError', 'you must enter post description');
+                $posts = Post::find($postID);
+                return view('posts.edit', ['posts' => $posts, 'postID' => $postID]);
+            } else { //there is no errors
+                //fetch request data
+                $fetchData = request()->all();
+                $flight = Post::find($postID);
+                $flight->title = $fetchData['title'];
+                $flight->description = $fetchData['description'];
+                $flight->save();
+                return to_route('posts.index');
+            }
+        }
     }
 
     public function destroy($postID)
     {
-        unset($this->posts[$postID-1]);
-        return view('posts.index', ['posts' => $this->posts]);
-
-//        return view('posts.edit', ['postID' => $postID]);
+        Post::find($postID)->delete();
+        return to_route('posts.index');
     }
 
-    public function update()
+    //restore deleted columns
+    public function showDeleted()
     {
-
-        dd("update");
-//        return view('posts.edit');
+        $posts = Post::onlyTrashed()->get();
+        if (count($posts) <= 0) {
+            return view('posts.emptyDelete');
+        }
+        return view('posts.showDeleted', ['posts' => $posts]);
     }
+
+    //to restore deleted column
+    public function restore($postID)
+    {
+        Post::withTrashed()->find($postID)->restore();
+        return to_route('posts.showDeleted');
+
+    }
+
 }

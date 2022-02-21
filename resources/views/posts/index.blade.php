@@ -38,7 +38,9 @@
         @endforeach
         </tbody>
     </table>
+{{--  for pag  --}}
     {{$posts->links()}}
+
 
     {{--    <section aria-label="Page test-center navigation example">--}}
     {{--        <ul class="pagination">--}}

@@ -15,11 +15,12 @@ use App\Http\Controllers\PostController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login'); //sol for logout ask eng.noha about that
+//    return view('welcome');
 });
 
 //GET, 	    /photos, 	    index,  	photos.index
-Route::get('posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/home', [PostController::class, 'home'])->name('posts.home');
 
 
 //GET, 	/photos/create, 	create, 	photos.create
@@ -47,3 +48,7 @@ Route::get('/empty', [PostController::class, 'empty'])->name('posts.empty');
 //reset delete data statement
 Route::get('/restored', [PostController::class, 'showDeleted'])->name('posts.showDeleted');
 Route::get('/restored/{postID}', [PostController::class, 'restore'])->name('posts.restored');
+
+Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

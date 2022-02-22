@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+
+
 
 class PostController extends Controller
 {
 
 //home
-    public function index()
+    public function home()
     {
         $posts = Post::paginate(10);
         if (count($posts) <= 0) {
             return view('posts.empty');
         }
-        return view('posts.index', ['posts' => $posts]);
+        return view('posts.home', ['posts' => $posts]);
     }
 
 
@@ -33,20 +36,18 @@ class PostController extends Controller
         return view('posts.create', ['user' => $user]);
     }
 
-    public function store()
+    public function store(PostRequest $request)
     {
-        if (request()->has('title') && request()->has('description') && request()->has('user_id')) {
+        //for validate
 
-            if (!request()->filled('title')) { //error in title
-                session()->put('titleError', 'you must enter post title');
-                $user = User::all();
-                return view('posts.create', ['user' => $user]);
-            } elseif (!request()->filled('description')) { //error in description
-                session()->put('descriptionError', 'you must enter post description');
-                $user = User::all();
-                return view('posts.create', ['user' => $user]);
-            } else { //there is no errors
-                $requestData = request()->all();
+//        request()->validate([
+//            'title'=>['required','min:3'],
+//            'description'=>['required']
+//        ],[
+//            'title.required'=>'gggg', //custom error
+//            'title.min'=>'minman' //custom error
+//        ]);
+        $requestData = request()->all();
 //                for ($i = 3; $i < 103; $i++) {
 //                    Post::create([
 //                        'title' => "Number $i",
@@ -54,10 +55,8 @@ class PostController extends Controller
 //                        'user_id' => '3',
 //                    ]);
 //                }
-                Post::create($requestData);
-                return to_route('posts.index');
-            }
-        }
+        Post::create($requestData);
+        return to_route('posts.home');
     }
 
 //show post
@@ -93,7 +92,7 @@ class PostController extends Controller
                 $flight->title = $fetchData['title'];
                 $flight->description = $fetchData['description'];
                 $flight->save();
-                return to_route('posts.index');
+                return to_route('posts.home');
             }
         }
     }
@@ -101,12 +100,16 @@ class PostController extends Controller
     public function destroy($postID)
     {
         Post::find($postID)->delete();
-        return to_route('posts.index');
+        return to_route('posts.home');
     }
 
     //restore deleted columns
     public function showDeleted()
     {
+//        $deleted_at = Post::whereNotNull('deleted_at')->get();
+//        $deleted_at = Post::where('deleted_at','null')->get();
+//        $deleted_at = Post::all()->first();
+//        dd($deleted_at);
         $posts = Post::onlyTrashed()->get();
         if (count($posts) <= 0) {
             return view('posts.emptyDelete');
@@ -119,7 +122,6 @@ class PostController extends Controller
     {
         Post::withTrashed()->find($postID)->restore();
         return to_route('posts.showDeleted');
-
     }
 
 }

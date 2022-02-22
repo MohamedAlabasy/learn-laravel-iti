@@ -5,27 +5,22 @@
     <form method="post" action="{{route('posts.store')}}" class="mt-5">
         @csrf
         <div class="mb-3">
+            @error('title')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <label for="title" class="form-label">Title</label>
-            <?php
-            if (session()->has('titleError')) {
-                echo "<span>" . session()->get('titleError') . "</span>";
-                session()->forget('titleError');
-            }
-            ?>
-            <input autofocus required minlength="3" maxlength="100" name="title" type="text" class="form-control"
+            <input name="title"  type="text" class="form-control @error('title') is-invalid @enderror"
                    id="title" aria-describedby="emailHelp">
 
         </div>
         <div class="mb-3">
+                @error('description')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <label for="description" class="form-label">Description</label>
-            <?php
-            if (session()->has('descriptionError')) {
-                echo "<span>" . session()->get('descriptionError') . "</span>";
-                session()->forget('descriptionError');
-            }
-            ?>
-            <textarea name="description" minlength="20" required maxlength="200" id="description"
-                      class="form-control"></textarea>
+            {{--            <textarea name="description" minlength="20" required maxlength="200" id="description"--}}
+            <textarea  name="description" id="description"
+                      class="@error('description') is-invalid @enderror form-control"></textarea>
         </div>
         <div class="mb-3">
             <label for="creator" class="form-label">Post Creator</label>

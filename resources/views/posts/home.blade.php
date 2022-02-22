@@ -40,7 +40,6 @@
     </table>
     {{--  for pag  --}}
     <div class="container" >
-
         {{$posts->links('pagination::bootstrap-4')}}
     </div>
 @endsection

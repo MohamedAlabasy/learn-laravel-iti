@@ -24,21 +24,24 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'min:3'],
-            'description' => ['required']
+            'title' => ['required', 'min:3', 'max:100', 'unique:posts,title'
+//                'not_regex:<\s*a[^>]*>(.*?)<\s*/\s*a>'
+            ],
+            'description' => ['required', 'min:20', 'max:200']
         ];
     }
 
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'title.required' => 'gggg', //custom error
-            'title.min' => 'minman' //custom error
-        ];
-    }
+//    /**
+//     * Get the error messages for the defined validation rules.
+//     *
+//     * @return array
+//     */
+//    public function messages()
+//    {
+//        return [
+//            'title.required' => 'gggg', //custom error
+//            'title.min' => 'minman' //custom error
+//
+//        ];
+//    }
 }

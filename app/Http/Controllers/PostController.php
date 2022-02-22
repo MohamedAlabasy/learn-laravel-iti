@@ -8,14 +8,14 @@ use App\Models\Post;
 use App\Models\User;
 
 
-
 class PostController extends Controller
 {
 
-        public function __construct()
-        {
-            $this->middleware('auth');
-        }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
 //home
     public function home()
     {
@@ -42,15 +42,7 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        //for validate
 
-//        request()->validate([
-//            'title'=>['required','min:3'],
-//            'description'=>['required']
-//        ],[
-//            'title.required'=>'gggg', //custom error
-//            'title.min'=>'minman' //custom error
-//        ]);
         $requestData = request()->all();
 //                for ($i = 3; $i < 103; $i++) {
 //                    Post::create([
@@ -77,28 +69,15 @@ class PostController extends Controller
         return view('posts.edit', ['posts' => $posts, 'postID' => $postID]);
     }
 
-    public function update($postID)
+    public function update($postID, PostRequest $request)
     {
-        if (request()->has('title') && request()->has('description')
-            && !empty($postID) && $postID > 0) {
-            if (!request()->filled('title')) { //error in title
-                session()->put('titleError', 'you must enter post title');
-                $posts = Post::find($postID);
-                return view('posts.edit', ['posts' => $posts, 'postID' => $postID]);
-            } elseif (!request()->filled('description')) { //error in description
-                session()->put('descriptionError', 'you must enter post description');
-                $posts = Post::find($postID);
-                return view('posts.edit', ['posts' => $posts, 'postID' => $postID]);
-            } else { //there is no errors
-                //fetch request data
-                $fetchData = request()->all();
-                $flight = Post::find($postID);
-                $flight->title = $fetchData['title'];
-                $flight->description = $fetchData['description'];
-                $flight->save();
-                return to_route('posts.home');
-            }
-        }
+        //fetch request data
+        $fetchData = request()->all();
+        $flight = Post::find($postID);
+        $flight->title = $fetchData['title'];
+        $flight->description = $fetchData['description'];
+        $flight->save();
+        return to_route('posts.home');
     }
 
     public function destroy($postID)

@@ -82,16 +82,17 @@
     </nav>
 
     <main class="container">
-        @if ($errors->any())
-            {{--        @dd($errors)--}}
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+{{--        for erro--}}
+{{--        @if ($errors->any())--}}
+{{--            --}}{{--        @dd($errors)--}}
+{{--            <div class="alert alert-danger">--}}
+{{--                <ul>--}}
+{{--                    @foreach ($errors->all() as $error)--}}
+{{--                        <li>{{ $error }}</li>--}}
+{{--                    @endforeach--}}
+{{--                </ul>--}}
+{{--            </div>--}}
+{{--        @endif--}}
         @yield('content')
     </main>
 </div>

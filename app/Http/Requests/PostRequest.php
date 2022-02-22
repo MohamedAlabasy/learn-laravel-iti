@@ -28,6 +28,7 @@ class PostRequest extends FormRequest
             'description' => ['required']
         ];
     }
+
     /**
      * Get the error messages for the defined validation rules.
      *
@@ -36,8 +37,8 @@ class PostRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required'=>'gggg', //custom error
-            'title.min'=>'minman' //custom error
+            'title.required' => 'gggg', //custom error
+            'title.min' => 'minman' //custom error
         ];
     }
 }

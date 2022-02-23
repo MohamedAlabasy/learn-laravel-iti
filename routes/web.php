@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use Laravel\Socialite\Facades\Socialite;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -53,3 +56,34 @@ Route::get('/restored/{postID}', [PostController::class, 'restore'])->name('post
 //for auth
 Auth::routes(); //ask eng noha
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+//for git hup authorization
+
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+})->name('auth.github');
+
+Route::get('/auth/callback', function () {
+//    dd('callback');
+    $githubUser = Socialite::driver('github')->user();
+//    dd($githubUser);
+    $user = User::where('email', $githubUser->email)->first();
+
+    if ($user) {
+        $user->update([
+            'email' => $githubUser->email,
+        ]);
+    } else {
+        $user = User::create([
+            'id' => $githubUser->id,
+            'name' => $githubUser->name,
+            'email' => $githubUser->email,
+            'remember_token' => $githubUser->token,
+        ]);
+    }
+
+    Auth::login($user);
+
+    return redirect('/home');
+});

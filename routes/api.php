@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PostsController;
+use Illuminate\Validation\ValidationException;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +21,7 @@ use App\Http\Controllers\Api\PostsController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/home', [PostsController::class, 'home']);
+Route::get('/home', [PostsController::class, 'home'])->middleware('auth:sanctum');
 
 Route::post('/posts', [PostsController::class, 'store']);
 
@@ -49,3 +52,21 @@ Route::get('/posts/{postID}', [PostsController::class, 'show']);
 //Auth::routes(); //ask eng noha
 ////Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
+//for token
+Route::post('/sanctum/token', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+        'device_name' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
+        ]);
+    }
+    return $user->createToken($request->device_name)->plainTextToken;
+});

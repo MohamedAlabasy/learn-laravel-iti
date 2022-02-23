@@ -24,7 +24,7 @@
             <label>{{$posts->user->email}}</label>
             <br>
             <label style="font-size: 20px;font-weight: bold">Create at :&nbsp;</label>
-            <label>{{$posts->created_at}}</label>
+            <label>{{$posts->created_at->format('d - M - Y / H:i:s a')}}</label>
         </div>
 
     </div>

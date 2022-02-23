@@ -36,7 +36,6 @@
                                     <input id="password" type="password"
                                            class="form-control @error('password') is-invalid @enderror" name="password"
                                            required autocomplete="current-password">
-
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -63,9 +62,11 @@
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Login') }}
                                     </button>
+                                    <a class="btn btn-dark" href="{{ route('auth.github') }}">Login with gitHup</a>
 
 
-{{--                                    @if (Route::has('password.request'))--}}
+
+                                    {{--                                    @if (Route::has('password.request'))--}}
 {{--                                        <a class="btn btn-link" href="{{ route('password.request') }}">--}}
 {{--                                            {{ __('Forgot Your Password?') }}--}}
 {{--                                        </a>--}}

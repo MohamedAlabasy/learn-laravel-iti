@@ -45,9 +45,7 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-
-
-        dd(request()->get('user_id'));
+//        dd(request()->get('user_id'));
         $requestData = request()->all();
         if (Post::where('id', '=', $requestData['user_id'])->exists()) {
             Post::create($requestData);

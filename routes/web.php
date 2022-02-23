@@ -73,16 +73,13 @@ Route::get('/auth/callback', function () {
     if ($user) {
         $user->update([
             'email' => $githubUser->email,
-//            'github_refresh_token' => $githubUser->refreshToken,
         ]);
     } else {
         $user = User::create([
             'id' => $githubUser->id,
             'name' => $githubUser->name,
             'email' => $githubUser->email,
-            'password' => $githubUser->token,
-//            'remember_token' => $githubUser->token,
-//            'github_refresh_token' => $githubUser->refreshToken,
+            'remember_token' => $githubUser->token,
         ]);
     }
 

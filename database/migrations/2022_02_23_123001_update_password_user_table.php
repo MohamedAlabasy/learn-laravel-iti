@@ -12,8 +12,8 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('users', function ($table) {
+            $table->string('password', 255)->nullable()->change();
         });
     }
 
@@ -24,8 +24,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            //
-        });
+        //
     }
 };

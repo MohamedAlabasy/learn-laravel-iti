@@ -27,7 +27,8 @@ class PostRequest extends FormRequest
             'title' => ['required', 'min:3', 'max:100', 'unique:posts,title'
 //                'not_regex:<\s*a[^>]*>(.*?)<\s*/\s*a>'
             ],
-            'description' => ['required', 'min:20', 'max:200']
+            'description' => ['required', 'min:10', 'max:200'],
+//            'user_id' => ['required']
         ];
     }
 

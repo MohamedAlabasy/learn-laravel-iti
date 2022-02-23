@@ -6,11 +6,14 @@ use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+use mysql_xdevapi\Exception;
+use Symfony\Component\Console\Input\Input;
 
 
 class PostController extends Controller
 {
 
+    //ask eng noha about that ?
     public function __construct()
     {
         $this->middleware('auth');
@@ -43,7 +46,15 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
 
+
+        dd(request()->get('user_id'));
         $requestData = request()->all();
+        if (Post::where('id', '=', $requestData['user_id'])->exists()) {
+            Post::create($requestData);
+            return to_route('posts.home');
+        }
+
+//        dd($requestData['user_id']);
 //                for ($i = 3; $i < 103; $i++) {
 //                    Post::create([
 //                        'title' => "Number $i",
@@ -51,8 +62,6 @@ class PostController extends Controller
 //                        'user_id' => '3',
 //                    ]);
 //                }
-        Post::create($requestData);
-        return to_route('posts.home');
     }
 
 //show post
@@ -78,6 +87,7 @@ class PostController extends Controller
         $flight->description = $fetchData['description'];
         $flight->save();
         return to_route('posts.home');
+
     }
 
     public function destroy($postID)
@@ -91,7 +101,6 @@ class PostController extends Controller
     {
 //        $deleted_at = Post::whereNotNull('deleted_at')->get();
 //        $deleted_at = Post::where('deleted_at','null')->get();
-//        $deleted_at = Post::all()->first();
 //        dd($deleted_at);
         $posts = Post::onlyTrashed()->get();
         if (count($posts) <= 0) {

@@ -22,7 +22,7 @@
                 <th scope="row">{{$post->id}}</th>
                 <td>{{$post->title}}</td>
                 <td>{{$post->user->name}}</td>
-                <td>{{$post->created_at}}</td>
+                <td>{{$post->created_at->format('d - m - Y')}}</td>
                 <td>
                     <a href="{{route('posts.restored',$post->id)}}" class="btn btn-warning">Restore</a>
                 </td>

@@ -24,7 +24,7 @@
                 <th scope="row">{{$post->id}}</th>
                 <td>{{$post->title}}</td>
                 <td>{{$post->user->name}}</td>
-                <td>{{$post->created_at}}</td>
+                <td>{{$post->created_at->format('d - M - Y')}}</td>
                 <td><a href="{{route('posts.show', $post->id)}}" class="btn btn-info">Show</a></td>
                 <td><a href="{{route('posts.edit', $post->id)}}" class="btn btn-primary">Edit</a></td>
                 <td>
@@ -39,7 +39,8 @@
         </tbody>
     </table>
     {{--  for pag  --}}
-    <div class="container" >
+    <div class="container mt-5 mb-4" style="padding: 0 30%">
         {{$posts->links('pagination::bootstrap-4')}}
     </div>
+    <br>
 @endsection
